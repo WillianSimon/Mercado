@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Emporio Soberano</title>
+<link rel="shortcut icon" href="favicon.svg" type="image/x-icon">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+  }
+
+  /* Cabeçalho */
+  header {
+    background: #071242;
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  header img {
+    height: 70px;
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2));
+  }
+  nav a {
+    color: #f0e6d2;
+    text-decoration: none;
+    margin-left: 30px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+    position: relative;
+  }
+  nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background-color: #ff8018;
+    left: 0;
+    bottom: -5px;
+    transition: width 0.3s ease;
+  }
+  nav a:hover,
+  nav a:focus {
+    color: #ff8018;
+  }
+  nav a:hover::after,
+  nav a:focus::after {
+    width: 100%;
+  }
+
+  /* Barra de anúncio */
+  .redline {
+    background-color: #ff8018;
+    color: #073642;
+    text-align: center;
+    padding: 18px 10px;
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 6px rgba(230,184,0,0.3);
+  }
+
+  /* Seção de Ofertas */
+  #ofertas {
+    padding: 50px 20px;
+    background-color: #ffffff;
+    max-width: 1200px;
+    margin: 40px auto;
+    border-radius: 12px;
+    box-shadow: 0 6px 25px rgba(7,54,66,0.15);
+    scroll-margin-top: 110px; /* ajuste para altura do seu menu fixo */
+
+  }
+  #ofertas h2 {
+    text-align: center;
+    color: #073642;
+    font-size: 2rem;
+    margin-bottom: 40px;
+    font-weight: 700;
+  }
+
+  .ofertas-grid {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .oferta {
+    background: linear-gradient(145deg, #ffffff, #ff8018);
+    border-radius: 16px;
+    padding: 30px 25px;
+    flex: 1;
+    min-width: 280px;
+    max-width: 320px;
+    box-shadow: 0 6px 15px rgba(0, 35, 230, 0.3);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .oferta:hover,
+  .oferta:focus {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 10, 102, 0.5);
+    outline: none;
+  }
+  .oferta h3 {
+    font-size: 1.8rem;
+    color: #073642;
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+  .oferta p {
+    font-size: 1.2rem;
+    color: #073642;
+    font-weight: bolder;
+  }
+
+  /* Quem Somos */
+  #quem-somos {
+    max-width: 1100px;
+    margin: 0 auto 50px;
+    display: flex;
+    gap: 40px;
+    background-color: #ffffff;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 20px rgba(7,54,66,0.1);
+    align-items: center;
+    scroll-margin-top: 110px; /* ajuste para altura do seu menu fixo */
+  }
+  #quem-somos img {
+    width: 600px;
+    border-radius: 16px;
+    box-shadow: 0px 0px 20px #ff801859;
+    object-fit: cover;
+  }
+  #quem-somos p {
+    flex: 1;
+    font-size: 1.15rem;
+    color: #073642;
+    font-weight: 500;
+  }
+  @media (max-width: 900px) {
+    #quem-somos {
+      flex-direction: column;
+      text-align: center;
+    }
+    #quem-somos img {
+      width: 90%;
+      max-width: 350px;
+    }
+  }
+
+  /* Endereço */
+  #endereco {
+    max-width: 1000px;
+    margin: 0 auto 60px;
+    background: #ffffff;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(7,54,66,0.1);
+    text-align: center;
+    scroll-margin-top: 110px; /* ajuste para altura do seu menu fixo */
+  }
+  #endereco h2 {
+    color: #073642;
+    font-size: 1.9rem;
+    margin-bottom: 30px;
+    font-weight: 700;
+  }
+  iframe {
+    width: 100%;
+    height: 400px;
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 4px 15px rgba(7,54,66,0.15);
+  }
+
+  /* Contato */
+  #contato {
+    max-width: 900px;
+    margin: 0 auto 80px;
+    background: #ffffff;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(7,54,66,0.1);
+    text-align: center;
+    color: #073642;
+    scroll-margin-top: 110px; /* ajuste para altura do seu menu fixo */
+  }
+  #contato h2 {
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+  #contato p {
+    font-size: 1.1rem;
+    margin: 8px 0;
+  }
+
+  /* Rodapé */
+  footer {
+    background: #071242;
+    color: #f0e6d2;
+    text-align: center;
+    padding: 18px;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+  }
+
+  /* Modal geral */
+  .modal {
+    display: none; /* aberto via JS */
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(7,54,66,0.85);
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+  }
+  .modal-content {
+    position: relative;
+    max-width: 950px;
+    width: 100%;
+    background: #f5f7fa;
+    border-radius: 16px;
+    padding: 30px 40px 40px;
+    box-shadow: 0 8px 35px rgba(0,0,0,0.15);
+    max-height: 90vh;
+    overflow-y: auto;
+    color: #073642;
+  }
+  .close {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 32px;
+    color: #073642;
+    cursor: pointer;
+    font-weight: 700;
+    transition: color 0.3s ease;
+  }
+  .close:hover,
+  .close:focus {
+    color: #e6b800;
+    outline: none;
+  }
+
+  .modal-header h1 {
+    color: #0a4a5c;
+    text-align: center;
+    font-size: 2.4rem;
+    margin-bottom: 8px;
+    font-weight: 900;
+  }
+  .modal-header h2 {
+    color: #0a4a5c;
+    text-align: center;
+    font-size: 1.4rem;
+    margin-top: 0;
+    margin-bottom: 28px;
+    font-weight: 700;
+  }
+
+  /* Grid de produtos no modal */
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  @media (max-width: 800px) {
+    .products-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 480px) {
+    .products-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .product-card {
+    background:rgb(236, 236, 0);
+    border-radius: 12px;
+    padding: 18px 14px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(230,184,0,0.3);
+    transition: transform 0.3s ease;
+    cursor: default;
+  }
+  .product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 30px rgba(230,184,0,0.5);
+  }
+  .product-card h3 {
+    color: #073642;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .product-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 10px rgba(7,54,66,0.15);
+  }
+  .product-card p {
+    font-size: 1rem;
+    color: #6b5840;
+  }
+  .price-old {
+    text-decoration: line-through;
+    opacity: 0.7;
+    margin-right: 8px;
+    color: black;
+    font-weight: 600;
+  }
+  .price-new {
+    color: red;
+    font-weight: 900;
+    font-size: 1.15rem;
+  }
+
+  /* Rodapé do modal */
+  .modal-footer {
+    margin-top: 30px;
+    border-top: 2px solid #e6b800;
+    padding-top: 20px;
+    text-align: center;
+    color: #6b5840;
+    font-weight: 600;
+  }
+  .modal-footer .address {
+    margin-bottom: 12px;
+    font-size: 1rem;
+  }
+  .modal-footer a.whatsapp {
+    display: inline-block;
+    background: #25D366;
+    color: #0b3c1b;
+    padding: 10px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.1rem;
+    box-shadow: 0 6px 12px rgba(37,211,102,0.6);
+    transition: background-color 0.3s ease;
+  }
+  .modal-footer a.whatsapp:hover,
+  .modal-footer a.whatsapp:focus {
+    background-color: #1ebc54;
+    outline: none;
+  }
+  /* Ocultar menu mobile inicialmente */
+.mobile-nav {
+  display: none;
+  position: absolute;
+  top: 70px;
+  right: 0;
+  background: #071242;
+  width: 200px;
+  flex-direction: column;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+  z-index: 100;
+}
+
+.mobile-nav a {
+  color: #f0e6d2;
+  padding: 15px 20px;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.mobile-nav a:last-child {
+  border-bottom: none;
+}
+
+.hamburger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: none; /* só aparece no mobile */
+}
+
+.hamburger svg {
+  display: block;
+}
+
+/* Responsivo */
+@media (max-width: 900px) {
+  .desktop-nav {
+    display: none;
+  }
+  .hamburger {
+    display: block;
+  }
+  header {
+    position: relative; /* necessário para o mobile-nav */
+  }
+  .mobile-nav.show {
+    display: flex;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <img src="logotipo.png" alt="Logo do Mercado">
+  
+  <!-- Navegação desktop -->
+  <nav class="desktop-nav">
+    <a href="#ofertas">Ofertas</a>
+    <a href="#quem-somos">Quem Somos</a>
+    <a href="#endereco">Endereço</a>
+    <a href="#contato">Contato</a>
+  </nav>
+
+  <!-- Ícone hambúrguer para mobile -->
+  <button class="hamburger" aria-label="Abrir menu" aria-expanded="false">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#f0e6d2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+
+  <!-- Menu mobile -->
+  <nav class="mobile-nav">
+    <a href="#ofertas" onclick="toggleMenu()">Ofertas</a>
+    <a href="#quem-somos" onclick="toggleMenu()">Quem Somos</a>
+    <a href="#endereco" onclick="toggleMenu()">Endereço</a>
+    <a href="#contato" onclick="toggleMenu()">Contato</a>
+  </nav>
+</header>
+
+<div class="redline">
+  Aproveite nossas promoções imperdíveis desta semana!
+</div>
+
+<section id="ofertas">
+  <h2>Ofertas da Semana - 13/08 a 15/08 de 2025</h2>
+  <div class="ofertas-grid">
+    <div class="oferta" tabindex="0" role="button" onclick="abrirModal('quarta')" onkeypress="if(event.key==='Enter') abrirModal('quarta')">
+      <h3>Sacolão</h3>
+      <p>Quarta-feira</p>
+    </div>
+    <div class="oferta" tabindex="0" role="button" onclick="abrirModal('quinta')" onkeypress="if(event.key==='Enter') abrirModal('quinta')">
+      <h3>Açougue</h3>
+      <p>Quinta-feira</p>
+    </div>
+    <div class="oferta" tabindex="0" role="button" onclick="abrirModal('sexta')" onkeypress="if(event.key==='Enter') abrirModal('sexta')">
+      <h3>Padaria</h3>
+      <p>Sexta-feira</p>
+    </div>
+  </div>
+</section>
+
+<section id="quem-somos">
+  <img src="Fachada empório soberano.png" alt="Equipe do mercado">
+  <p>Somos o Mercado Empório Soberano, comprometidos em oferecer produtos de qualidade e um atendimento especial para todos os nossos clientes. Com mais de 10 anos de experiência, nos tornamos referência na comunidade, oferecendo sempre preços justos e promoções imperdíveis.</p>
+</section>
+
+<section id="endereco">
+  <h2>Nosso Endereço</h2>
+  <iframe 
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.955238950808!2d-46.72994642564928!3d-23.53377546121451!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ceff1da00dff1d%3A0xd03b65d5a4d518c!2sR.%20Jacintho%20Pereira%2C%20404%20-%20Parque%20Pan%20Americano%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2002992-130!5e0!3m2!1spt-BR!2sbr!4v1693933487591!5m2!1spt-BR!2sbr" 
+    allowfullscreen="" 
+    loading="lazy" 
+    referrerpolicy="no-referrer-when-downgrade">
+  </iframe>
+</section>
+
+<section id="contato">
+  <h2>Entre em Contato</h2>
+  <p>Telefone: (11) 99999-9999</p>
+  <p>Email: contato@emporiosoberano.com.br</p>
+</section>
+
+<footer>
+  &copy; 2025 Empório Soberano - Todos os direitos reservados.
+</footer>
+
+
+
+
+<!-- MODAL: QUARTA -->
+<div id="modal-quarta" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-labelledby="quarta-title">
+        <span class="close" onclick="fecharModal('quarta')">&times;</span>
+
+        <div class="modal-header">
+            <h1 id="quarta-title">Super Ofertas</h1>
+            <h2>Quarta-feira</h2>
+        </div>
+
+        <div class="products-grid">
+            <!-- 9 produtos (exemplos) -->
+            <div class="product-card">
+                <h3>Tomate</h3>
+                <img src="tomate.jpg" alt="Tomate">
+                <p><span class="price-old">De R$ 6,99</span><span class="price-new">por R$ 4,99 Kg</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Batata</h3>
+                <img src="batata.jpg" alt="Batata">
+                <p><span class="price-old">De R$ 5,99</span><span class="price-new">por R$ 3,99 Kg</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Cenoura</h3>
+                <img src="cenoura.jpg" alt="Cenoura">
+                <p><span class="price-old">De R$ 4,99</span><span class="price-new">por R$ 2,99 Kg</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Maçã</h3>
+                <img src="maça.jpg" alt="Maçã">
+                <p><span class="price-old">De R$ 8,99</span><span class="price-new">por R$ 6,99 Kg</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Banana</h3>
+                <img src="banana.jpg" alt="Banana">
+                <p><span class="price-old">De R$ 3,99</span><span class="price-new">por R$ 2,99 Kg</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Alface</h3>
+                <img src="alface.jpg" alt="Alface">
+                <p><span class="price-old">De R$ 3,50</span><span class="price-new">por R$ 1,99 un</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Cebola</h3>
+                <img src="cebola.jpg" alt="Cebola">
+                <p><span class="price-old">De R$ 4,99</span><span class="price-new">por R$ 3,49 Kg</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Laranja</h3>
+                <img src="laranja.jpg" alt="Laranja">
+                <p><span class="price-old">De R$ 7,99</span><span class="price-new">por R$ 5,99 Kg</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Abacaxi</h3>
+                <img src="abacaxi.jpg" alt="Abacaxi">
+                <p><span class="price-old">De R$ 12,00</span><span class="price-new">por R$ 8,90 un</span></p>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <div class="address">Rua Jacintho Pereira, 404 - Parque Pan Americano, São Paulo - SP, 02992-130</div>
+            <div class="whatsapp"><a class="whatsapp" href="https://wa.me/5511999999999" target="_blank" rel="noopener">WhatsApp: (11) 99999-9999</a></div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: QUINTA -->
+<div id="modal-quinta" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-labelledby="quinta-title">
+        <span class="close" onclick="fecharModal('quinta')">&times;</span>
+
+        <div class="modal-header">
+            <h1 id="quinta-title">Super Ofertas</h1>
+            <h2>Quinta-feira</h2>
+        </div>
+
+        <div class="products-grid">
+            <!-- 9 produtos - Açougue (exemplos) -->
+            <div class="product-card">
+                <h3>Alcatra</h3>
+                <img src="https://via.placeholder.com/400x300?text=Alcatra" alt="Alcatra">
+                <p><span class="price-old">De R$ 39,90</span><span class="price-new">por R$ 29,90 Kg</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Patinho</h3>
+                <img src="https://via.placeholder.com/400x300?text=Patinho" alt="Patinho">
+                <p><span class="price-old">De R$ 34,90</span><span class="price-new">por R$ 24,90 Kg</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Frango</h3>
+                <img src="https://via.placeholder.com/400x300?text=Frango" alt="Frango">
+                <p><span class="price-old">De R$ 14,90</span><span class="price-new">por R$ 9,90 Kg</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Coxão Mole</h3>
+                <img src="https://via.placeholder.com/400x300?text=Cox%C3%A3o" alt="Coxão">
+                <p><span class="price-old">De R$ 36,90</span><span class="price-new">por R$ 27,90 Kg</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Costela</h3>
+                <img src="https://via.placeholder.com/400x300?text=Costela" alt="Costela">
+                <p><span class="price-old">De R$ 32,90</span><span class="price-new">por R$ 22,90 Kg</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Linguiça</h3>
+                <img src="https://via.placeholder.com/400x300?text=Lingui%C3%A7a" alt="Linguiça">
+                <p><span class="price-old">De R$ 19,90</span><span class="price-new">por R$ 14,90 Kg</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Filé de Peito</h3>
+                <img src="https://via.placeholder.com/400x300?text=Fil%C3%A9+Peito" alt="Filé de Peito">
+                <p><span class="price-old">De R$ 29,90</span><span class="price-new">por R$ 19,90 Kg</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Bife</h3>
+                <img src="https://via.placeholder.com/400x300?text=Bife" alt="Bife">
+                <p><span class="price-old">De R$ 39,90</span><span class="price-new">por R$ 29,90 Kg</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Acém</h3>
+                <img src="https://via.placeholder.com/400x300?text=Ac%C3%A9m" alt="Acém">
+                <p><span class="price-old">De R$ 28,90</span><span class="price-new">por R$ 19,90 Kg</span></p>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <div class="address">Rua Jacintho Pereira, 404 - Parque Pan Americano, São Paulo - SP, 02992-130</div>
+            <div class="whatsapp"><a class="whatsapp" href="https://wa.me/5511999999999" target="_blank" rel="noopener">WhatsApp: (11) 99999-9999</a></div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: SEXTA -->
+<div id="modal-sexta" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-labelledby="sexta-title">
+        <span class="close" onclick="fecharModal('sexta')">&times;</span>
+
+        <div class="modal-header">
+            <h1 id="sexta-title">Super Ofertas</h1>
+            <h2>Sexta-feira</h2>
+        </div>
+
+        <div class="products-grid">
+            <!-- 9 produtos - Padaria (exemplos) -->
+            <div class="product-card">
+                <h3>Pão Francês</h3>
+                <img src="pão francês.jpg" alt="Pão Francês">
+                <p><span class="price-old">De R$ 20,00</span><span class="price-new">por R$ 14,90 Kg</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Bolo de Fubá</h3>
+                <img src="bolo de fubá.jpg" alt="Bolo de Fubá">
+                <p><span class="price-old">De R$ 20,00</span><span class="price-new">por R$ 15,00 un</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Croissant</h3>
+                <img src="croissant.jpg" alt="Croissant">
+                <p><span class="price-old">De R$ 5,00</span><span class="price-new">por R$ 3,50 un</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Pão de Leite</h3>
+                <img src="pão de leite.jpeg" alt="Pão de Leite">
+                <p><span class="price-old">De R$ 12,00</span><span class="price-new">por R$ 9,90 un</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Pão de Queijo</h3>
+                <img src="pão de queijo.jpeg" alt="Pão de Queijo">
+                <p><span class="price-old">De R$ 18,00</span><span class="price-new">por R$ 12,90 Kg</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Ana Carolina</h3>
+                <img src="ana carolina.jpg" alt="Ana Carolina">
+                <p><span class="price-old">De R$ 10,00</span><span class="price-new">por R$ 7,50 un</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Sonho</h3>
+                <img src="sonho.jpg" alt="Sonho">
+                <p><span class="price-old">De R$ 6,00</span><span class="price-new">por R$ 4,50 un</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>Biscoito</h3>
+                <img src="biscoito.jpg" alt="Biscoito">
+                <p><span class="price-old">De R$ 8,00</span><span class="price-new">por R$ 5,99 un</span></p>
+            </div>
+
+            <div class="product-card">
+                <h3>pão de Frios</h3>
+                <img src="pão de frios.jpg" alt="Pão de Frios">
+                <p><span class="price-old">De R$ 7,00</span><span class="price-new">por R$ 4,99 un</span></p>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <div class="address">Rua Jacintho Pereira, 404 - Parque Pan Americano, São Paulo - SP, 02992-130</div>
+            <div class="whatsapp"><a class="whatsapp" href="https://wa.me/5511999999999" target="_blank" rel="noopener">WhatsApp: (11) 99999-9999</a></div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal e scripts permanecem iguais ao seu código original, só mudam estilos CSS -->
+
+<script>
+  function abrirModal(dia) {
+    const modal = document.getElementById('modal-' + dia);
+    if (!modal) return;
+    modal.style.display = 'flex';
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    const content = modal.querySelector('.modal-content');
+    if (content) content.scrollTop = 0;
+  }
+
+  function fecharModal(dia) {
+    const modal = document.getElementById('modal-' + dia);
+    if (!modal) return;
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  window.addEventListener('click', function(e) {
+    document.querySelectorAll('.modal').forEach(modal => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+    });
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal').forEach(modal => {
+        modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
+      });
+      document.body.style.overflow = '';
+    }
+  });
+  // Abrir/fechar menu mobile
+const hamburger = document.querySelector('.hamburger');
+const mobileNav = document.querySelector('.mobile-nav');
+
+hamburger.addEventListener('click', () => {
+  const expanded = hamburger.getAttribute('aria-expanded') === 'true';
+  hamburger.setAttribute('aria-expanded', !expanded);
+  mobileNav.classList.toggle('show');
+});
+
+function toggleMenu() {
+  mobileNav.classList.remove('show');
+  hamburger.setAttribute('aria-expanded', 'false');
+}
+</script>
+
+<!-- Modal HTMLs continuam iguais -->
+
+</body>
+</html>
